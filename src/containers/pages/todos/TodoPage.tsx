@@ -1,35 +1,24 @@
 import * as React from 'react';
 import { Component }  from 'react';
+import { connect } from 'react-redux';
+import { Dispatch } from 'redux';
 import { Grid }  from 'semantic-ui-react';
 import TodoTable from '../../../components/tables/TodoTable';
 import { ITodo } from '../../../models/Todo';
+import { IState } from '../../../ReduxStore';
+import { findTodos } from './actions/TodoAction';
 
-interface ITodoPageState {
+interface ITodoPageStateProps {
     todos: ITodo[];
 }
 
-export default class TodoPage extends Component<{}, ITodoPageState> {
-    public constructor(state: ITodoPageState) {
-        super(state);
+interface IDispatchProps {
+    findTodos: () => void;
+}
 
-        this.state = {
-            todos: [
-                {
-                    createdAt: '2018-07-01T00:00:00',
-                    description: 'Desc 1',
-                    id: 0,
-                    status: 'OPEN',
-                    title: 'Title 1'
-                },
-                {
-                    createdAt: '2018-07-01T00:00:00',
-                    description: 'Desc 2',
-                    id: 1,
-                    status: 'OPEN',
-                    title: 'Title 2'
-                },
-            ]
-        }
+class TodoPage extends Component<ITodoPageStateProps & IDispatchProps, {}> {
+    public  componentDidMount() {
+        this.props.findTodos();
     }
 
     public render() {
@@ -37,9 +26,23 @@ export default class TodoPage extends Component<{}, ITodoPageState> {
             <Grid columns = { 3 }>
                 <Grid.Column/>
                 <Grid.Column>
-                    <TodoTable todos = { this.state.todos }/>
+                    <TodoTable todos = { this.props.todos }/>
                 </Grid.Column>
             </Grid>
         );
     }
 }
+
+function mapStateToProps(state: IState): ITodoPageStateProps {
+    return {
+        todos: state.todoReducer.todos
+    };
+}
+
+function mapDispatchToProps(dispatch: Dispatch): IDispatchProps {
+    return {
+        findTodos: () => dispatch<any>(findTodos())
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps) (TodoPage);
