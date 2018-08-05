@@ -3,29 +3,30 @@ import { ITodo } from '../../../../models/Todo';
 import * as constants from '../constants/TodoConstant';
 
 export interface ISetTodos {
+    readonly todos: ITodo[];
     readonly type: constants.TODOS_SET;
-    readonly payload: ITodo[];
 }
 
-export interface IViewOpenTodos {
-    readonly type: constants.TODOS_VIEW_OPEN;
-    readonly payload: ITodo[];
+export interface ISetVisibilty {
+    readonly todos: ITodo[];
+    readonly type: constants.TODOS_SET_VISIBILTY;
+    readonly filter: string;
 }
 
-export type TodoAction = ISetTodos & IViewOpenTodos;
+export type TodoAction = ISetTodos | ISetVisibilty;
 
-export function setTodos(payload: ITodo[]): ISetTodos {
+export function setTodos(todos: ITodo[]): ISetTodos {
     return {
-        payload,
+        todos,
         type: constants.TODOS_SET
     };
 }
 
-export function viewOpenTodos(payload: ITodo[]): IViewOpenTodos {
+export function setVisibility(filter = constants.TODOS_VIEW_ALL) {
     return {
-        payload,
-        type: constants.TODOS_VIEW_OPEN
-    };
+        filter,
+        type: constants.TODOS_SET_VISIBILTY
+    }
 }
 
 const initialData: ITodo[] = [
@@ -49,11 +50,31 @@ const initialData: ITodo[] = [
         id: 2,
         status: 'OPEN',
         title: 'Title 3'
+    },
+    {
+        createdAt: '2018-07-01T00:00:00',
+        description: 'Desc 4',
+        id: 3,
+        status: 'CLOSE',
+        title: 'Title 4'
+    },
+    {
+        createdAt: '2018-07-01T00:00:00',
+        description: 'Desc 5',
+        id: 4,
+        status: 'CLOSE',
+        title: 'Title 5'
     }
 ]
 
 export function findTodos() {
     return (dispatch: Dispatch) => {
         dispatch(setTodos(initialData));
+    }
+}
+
+export function setFilter(filter: string) {
+    return (dispatch: Dispatch) => {
+        dispatch(setVisibility(filter));
     }
 }

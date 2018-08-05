@@ -20,7 +20,7 @@ export default class TodoTable extends Component<ITodoTableProps, {}> {
                 <Table.Body>
                     {
                         this.props.todos.map(todo => (
-                            <Table.Row>
+                            <Table.Row key = { todo.id }>
                                 <Table.Cell>{ todo.title }</Table.Cell>
                                 <Table.Cell>{ todo.description }</Table.Cell>
                             </Table.Row>
