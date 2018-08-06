@@ -13,7 +13,14 @@ export interface ISetVisibilty {
     readonly filter: string;
 }
 
-export type TodoAction = ISetTodos | ISetVisibilty;
+export interface IAddTodo {
+    readonly description: string;
+    readonly id: number;
+    readonly title: string;
+    readonly type: constants.TODOS_ADD;
+}
+
+export type TodoAction = ISetTodos | ISetVisibilty | IAddTodo;
 
 export function setTodos(todos: ITodo[]): ISetTodos {
     return {
@@ -26,6 +33,16 @@ export function setVisibility(filter = constants.TODOS_VIEW_ALL) {
     return {
         filter,
         type: constants.TODOS_SET_VISIBILTY
+    }
+}
+
+let lastId = 4;
+export function addTodo(title: string, description: string): IAddTodo {
+    return {
+        description,
+        id: ++lastId,
+        title,
+        type: constants.TODOS_ADD
     }
 }
 
@@ -67,6 +84,10 @@ const initialData: ITodo[] = [
     }
 ]
 
+/**
+ * Dispatching actions
+ */
+
 export function findTodos() {
     return (dispatch: Dispatch) => {
         dispatch(setTodos(initialData));
@@ -76,5 +97,11 @@ export function findTodos() {
 export function setFilter(filter: string) {
     return (dispatch: Dispatch) => {
         dispatch(setVisibility(filter));
+    }
+}
+
+export function createTodo(title: string, description: string) {
+    return (dispatch: Dispatch) => {
+        dispatch(addTodo(title, description));
     }
 }

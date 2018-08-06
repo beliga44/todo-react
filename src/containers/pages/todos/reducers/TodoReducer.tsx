@@ -20,6 +20,19 @@ export function todoReducer(state: ITodoState = initialState, action: TodoAction
             return Object.assign({}, { ...state }, {
                 visibilityFilter: action.filter
             });
+        case constants.TODOS_ADD:
+            return Object.assign({}, state, {
+                todos: [
+                    ...state.todos,
+                    {
+                        createdAt: '2018-07-01T00:00:00',
+                        description: action.description,
+                        id: action.id,
+                        status: 'OPEN',
+                        title: action.title
+                    }
+                ]
+            })
         default:
             return state;
     }
